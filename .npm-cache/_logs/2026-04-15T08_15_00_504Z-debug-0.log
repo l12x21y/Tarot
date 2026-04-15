@@ -1,0 +1,443 @@
+0 verbose cli D:\Nodejs\node.exe D:\Nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.9.3
+2 info using node@v22.18.0
+3 silly config load:file:D:\Nodejs\node_modules\npm\npmrc
+4 silly config load:file:E:\Interpretive_Friction-main\.npmrc
+5 silly config load:file:C:\Users\Lenovo\.npmrc
+6 silly config load:file:D:\Nodejs\node_global\etc\npmrc
+7 verbose title npm install
+8 verbose argv "install" "--cache" ".npm-cache"
+9 verbose logfile logs-max:10 dir:E:\Interpretive_Friction-main\.npm-cache\_logs\2026-04-15T08_15_00_504Z-
+10 verbose logfile E:\Interpretive_Friction-main\.npm-cache\_logs\2026-04-15T08_15_00_504Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4345298944 maxSize:1086324736 maxEntrySize:543162368
+13 silly idealTree buildDeps
+14 silly fetch manifest dotenv@^16.4.7
+15 silly packumentCache full:https://registry.npmjs.org/dotenv cache-miss
+16 http fetch GET 200 https://registry.npmjs.org/dotenv 1216ms (cache miss)
+17 silly packumentCache full:https://registry.npmjs.org/dotenv set size:undefined disposed:false
+18 silly placeDep ROOT dotenv@16.6.1 OK for: interpretive-friction@0.0.1 want: ^16.4.7
+19 silly reify moves {}
+20 silly audit bulk request {
+20 silly audit   '@babel/code-frame': [ '7.29.0' ],
+20 silly audit   '@babel/compat-data': [ '7.29.0' ],
+20 silly audit   '@babel/core': [ '7.29.0' ],
+20 silly audit   '@babel/generator': [ '7.29.1' ],
+20 silly audit   '@babel/helper-compilation-targets': [ '7.28.6' ],
+20 silly audit   '@babel/helper-globals': [ '7.28.0' ],
+20 silly audit   '@babel/helper-module-imports': [ '7.28.6' ],
+20 silly audit   '@babel/helper-module-transforms': [ '7.28.6' ],
+20 silly audit   '@babel/helper-plugin-utils': [ '7.28.6' ],
+20 silly audit   '@babel/helper-string-parser': [ '7.27.1' ],
+20 silly audit   '@babel/helper-validator-identifier': [ '7.28.5' ],
+20 silly audit   '@babel/helper-validator-option': [ '7.27.1' ],
+20 silly audit   '@babel/helpers': [ '7.29.2' ],
+20 silly audit   '@babel/parser': [ '7.29.2' ],
+20 silly audit   '@babel/plugin-transform-react-jsx-self': [ '7.27.1' ],
+20 silly audit   '@babel/plugin-transform-react-jsx-source': [ '7.27.1' ],
+20 silly audit   '@babel/template': [ '7.28.6' ],
+20 silly audit   '@babel/traverse': [ '7.29.0' ],
+20 silly audit   '@babel/types': [ '7.29.0' ],
+20 silly audit   '@esbuild/aix-ppc64': [ '0.21.5' ],
+20 silly audit   '@esbuild/android-arm': [ '0.21.5' ],
+20 silly audit   '@esbuild/android-arm64': [ '0.21.5' ],
+20 silly audit   '@esbuild/android-x64': [ '0.21.5' ],
+20 silly audit   '@esbuild/darwin-arm64': [ '0.21.5' ],
+20 silly audit   '@esbuild/darwin-x64': [ '0.21.5' ],
+20 silly audit   '@esbuild/freebsd-arm64': [ '0.21.5' ],
+20 silly audit   '@esbuild/freebsd-x64': [ '0.21.5' ],
+20 silly audit   '@esbuild/linux-arm': [ '0.21.5' ],
+20 silly audit   '@esbuild/linux-arm64': [ '0.21.5' ],
+20 silly audit   '@esbuild/linux-ia32': [ '0.21.5' ],
+20 silly audit   '@esbuild/linux-loong64': [ '0.21.5' ],
+20 silly audit   '@esbuild/linux-mips64el': [ '0.21.5' ],
+20 silly audit   '@esbuild/linux-ppc64': [ '0.21.5' ],
+20 silly audit   '@esbuild/linux-riscv64': [ '0.21.5' ],
+20 silly audit   '@esbuild/linux-s390x': [ '0.21.5' ],
+20 silly audit   '@esbuild/linux-x64': [ '0.21.5' ],
+20 silly audit   '@esbuild/netbsd-x64': [ '0.21.5' ],
+20 silly audit   '@esbuild/openbsd-x64': [ '0.21.5' ],
+20 silly audit   '@esbuild/sunos-x64': [ '0.21.5' ],
+20 silly audit   '@esbuild/win32-arm64': [ '0.21.5' ],
+20 silly audit   '@esbuild/win32-ia32': [ '0.21.5' ],
+20 silly audit   '@esbuild/win32-x64': [ '0.21.5' ],
+20 silly audit   '@jridgewell/gen-mapping': [ '0.3.13' ],
+20 silly audit   '@jridgewell/remapping': [ '2.3.5' ],
+20 silly audit   '@jridgewell/resolve-uri': [ '3.1.2' ],
+20 silly audit   '@jridgewell/sourcemap-codec': [ '1.5.5' ],
+20 silly audit   '@jridgewell/trace-mapping': [ '0.3.31' ],
+20 silly audit   '@rolldown/pluginutils': [ '1.0.0-beta.27' ],
+20 silly audit   '@rollup/rollup-android-arm-eabi': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-android-arm64': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-darwin-arm64': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-darwin-x64': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-freebsd-arm64': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-freebsd-x64': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-linux-arm-gnueabihf': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-linux-arm-musleabihf': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-linux-arm64-gnu': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-linux-arm64-musl': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-linux-loong64-gnu': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-linux-loong64-musl': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-linux-ppc64-gnu': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-linux-ppc64-musl': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-linux-riscv64-gnu': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-linux-riscv64-musl': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-linux-s390x-gnu': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-linux-x64-gnu': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-linux-x64-musl': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-openbsd-x64': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-openharmony-arm64': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-win32-arm64-msvc': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-win32-ia32-msvc': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-win32-x64-gnu': [ '4.60.1' ],
+20 silly audit   '@rollup/rollup-win32-x64-msvc': [ '4.60.1' ],
+20 silly audit   '@types/babel__core': [ '7.20.5' ],
+20 silly audit   '@types/babel__generator': [ '7.27.0' ],
+20 silly audit   '@types/babel__template': [ '7.4.4' ],
+20 silly audit   '@types/babel__traverse': [ '7.28.0' ],
+20 silly audit   '@types/estree': [ '1.0.8' ],
+20 silly audit   '@types/prop-types': [ '15.7.15' ],
+20 silly audit   '@types/react': [ '18.3.28' ],
+20 silly audit   '@types/react-dom': [ '18.3.7' ],
+20 silly audit   '@vitejs/plugin-react': [ '4.7.0' ],
+20 silly audit   'base64-js': [ '1.5.1' ],
+20 silly audit   'baseline-browser-mapping': [ '2.10.19' ],
+20 silly audit   'better-sqlite3': [ '11.10.0' ],
+20 silly audit   bindings: [ '1.5.0' ],
+20 silly audit   bl: [ '4.1.0' ],
+20 silly audit   browserslist: [ '4.28.2' ],
+20 silly audit   buffer: [ '5.7.1' ],
+20 silly audit   'caniuse-lite': [ '1.0.30001788' ],
+20 silly audit   chownr: [ '1.1.4' ],
+20 silly audit   'convert-source-map': [ '2.0.0' ],
+20 silly audit   csstype: [ '3.2.3' ],
+20 silly audit   debug: [ '4.4.3' ],
+20 silly audit   'decompress-response': [ '6.0.0' ],
+20 silly audit   'deep-extend': [ '0.6.0' ],
+20 silly audit   'detect-libc': [ '2.1.2' ],
+20 silly audit   'electron-to-chromium': [ '1.5.336' ],
+20 silly audit   'end-of-stream': [ '1.4.5' ],
+20 silly audit   esbuild: [ '0.21.5' ],
+20 silly audit   escalade: [ '3.2.0' ],
+20 silly audit   'expand-template': [ '2.0.3' ],
+20 silly audit   'file-uri-to-path': [ '1.0.0' ],
+20 silly audit   'framer-motion': [ '11.18.2' ],
+20 silly audit   'fs-constants': [ '1.0.0' ],
+20 silly audit   fsevents: [ '2.3.3' ],
+20 silly audit   gensync: [ '1.0.0-beta.2' ],
+20 silly audit   'github-from-package': [ '0.0.0' ],
+20 silly audit   ieee754: [ '1.2.1' ],
+20 silly audit   inherits: [ '2.0.4' ],
+20 silly audit   ini: [ '1.3.8' ],
+20 silly audit   'js-tokens': [ '4.0.0' ],
+20 silly audit   jsesc: [ '3.1.0' ],
+20 silly audit   json5: [ '2.2.3' ],
+20 silly audit   'loose-envify': [ '1.4.0' ],
+20 silly audit   'lru-cache': [ '5.1.1' ],
+20 silly audit   'lucide-react': [ '0.542.0' ],
+20 silly audit   'mimic-response': [ '3.1.0' ],
+20 silly audit   minimist: [ '1.2.8' ],
+20 silly audit   'mkdirp-classic': [ '0.5.3' ],
+20 silly audit   'motion-dom': [ '11.18.1' ],
+20 silly audit   'motion-utils': [ '11.18.1' ],
+20 silly audit   ms: [ '2.1.3' ],
+20 silly audit   nanoid: [ '3.3.11' ],
+20 silly audit   'napi-build-utils': [ '2.0.0' ],
+20 silly audit   'node-abi': [ '3.89.0' ],
+20 silly audit   semver: [ '7.7.4', '6.3.1' ],
+20 silly audit   'node-releases': [ '2.0.37' ],
+20 silly audit   once: [ '1.4.0' ],
+20 silly audit   picocolors: [ '1.1.1' ],
+20 silly audit   postcss: [ '8.5.9' ],
+20 silly audit   'prebuild-install': [ '7.1.3' ],
+20 silly audit   pump: [ '3.0.4' ],
+20 silly audit   rc: [ '1.2.8' ],
+20 silly audit   react: [ '18.3.1' ],
+20 silly audit   'react-dom': [ '18.3.1' ],
+20 silly audit   'react-refresh': [ '0.17.0' ],
+20 silly audit   'readable-stream': [ '3.6.2' ],
+20 silly audit   rollup: [ '4.60.1' ],
+20 silly audit   'safe-buffer': [ '5.2.1' ],
+20 silly audit   scheduler: [ '0.23.2' ],
+20 silly audit   'simple-concat': [ '1.0.1' ],
+20 silly audit   'simple-get': [ '4.0.1' ],
+20 silly audit   'source-map-js': [ '1.2.1' ],
+20 silly audit   string_decoder: [ '1.3.0' ],
+20 silly audit   'strip-json-comments': [ '2.0.1' ],
+20 silly audit   'tar-fs': [ '2.1.4' ],
+20 silly audit   'tar-stream': [ '2.2.0' ],
+20 silly audit   tslib: [ '2.8.1' ],
+20 silly audit   'tunnel-agent': [ '0.6.0' ],
+20 silly audit   typescript: [ '5.9.3' ],
+20 silly audit   'update-browserslist-db': [ '1.2.3' ],
+20 silly audit   'util-deprecate': [ '1.0.2' ],
+20 silly audit   vite: [ '5.4.21' ],
+20 silly audit   wrappy: [ '1.0.2' ],
+20 silly audit   yallist: [ '3.1.1' ],
+20 silly audit   dotenv: [ '16.6.1' ]
+20 silly audit }
+21 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\fsevents
+22 silly reify mark deleted [ 'E:\\Interpretive_Friction-main\\node_modules\\fsevents' ]
+23 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@rollup\rollup-win32-ia32-msvc
+24 silly reify mark deleted [
+24 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@rollup\\rollup-win32-ia32-msvc'
+24 silly reify ]
+25 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@rollup\rollup-win32-arm64-msvc
+26 silly reify mark deleted [
+26 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@rollup\\rollup-win32-arm64-msvc'
+26 silly reify ]
+27 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@rollup\rollup-openharmony-arm64
+28 silly reify mark deleted [
+28 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@rollup\\rollup-openharmony-arm64'
+28 silly reify ]
+29 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@rollup\rollup-openbsd-x64
+30 silly reify mark deleted [
+30 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@rollup\\rollup-openbsd-x64'
+30 silly reify ]
+31 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@rollup\rollup-linux-x64-musl
+32 silly reify mark deleted [
+32 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@rollup\\rollup-linux-x64-musl'
+32 silly reify ]
+33 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@rollup\rollup-linux-x64-gnu
+34 silly reify mark deleted [
+34 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@rollup\\rollup-linux-x64-gnu'
+34 silly reify ]
+35 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@rollup\rollup-linux-s390x-gnu
+36 silly reify mark deleted [
+36 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@rollup\\rollup-linux-s390x-gnu'
+36 silly reify ]
+37 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@rollup\rollup-linux-riscv64-musl
+38 silly reify mark deleted [
+38 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@rollup\\rollup-linux-riscv64-musl'
+38 silly reify ]
+39 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@rollup\rollup-linux-riscv64-gnu
+40 silly reify mark deleted [
+40 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@rollup\\rollup-linux-riscv64-gnu'
+40 silly reify ]
+41 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@rollup\rollup-linux-ppc64-musl
+42 silly reify mark deleted [
+42 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@rollup\\rollup-linux-ppc64-musl'
+42 silly reify ]
+43 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@rollup\rollup-linux-ppc64-gnu
+44 silly reify mark deleted [
+44 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@rollup\\rollup-linux-ppc64-gnu'
+44 silly reify ]
+45 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@rollup\rollup-linux-loong64-musl
+46 silly reify mark deleted [
+46 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@rollup\\rollup-linux-loong64-musl'
+46 silly reify ]
+47 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@rollup\rollup-linux-loong64-gnu
+48 silly reify mark deleted [
+48 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@rollup\\rollup-linux-loong64-gnu'
+48 silly reify ]
+49 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@rollup\rollup-linux-arm64-musl
+50 silly reify mark deleted [
+50 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@rollup\\rollup-linux-arm64-musl'
+50 silly reify ]
+51 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@rollup\rollup-linux-arm64-gnu
+52 silly reify mark deleted [
+52 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@rollup\\rollup-linux-arm64-gnu'
+52 silly reify ]
+53 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@rollup\rollup-linux-arm-musleabihf
+54 silly reify mark deleted [
+54 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@rollup\\rollup-linux-arm-musleabihf'
+54 silly reify ]
+55 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@rollup\rollup-linux-arm-gnueabihf
+56 silly reify mark deleted [
+56 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@rollup\\rollup-linux-arm-gnueabihf'
+56 silly reify ]
+57 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@rollup\rollup-freebsd-x64
+58 silly reify mark deleted [
+58 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@rollup\\rollup-freebsd-x64'
+58 silly reify ]
+59 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@rollup\rollup-freebsd-arm64
+60 silly reify mark deleted [
+60 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@rollup\\rollup-freebsd-arm64'
+60 silly reify ]
+61 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@rollup\rollup-darwin-x64
+62 silly reify mark deleted [
+62 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@rollup\\rollup-darwin-x64'
+62 silly reify ]
+63 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@rollup\rollup-darwin-arm64
+64 silly reify mark deleted [
+64 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@rollup\\rollup-darwin-arm64'
+64 silly reify ]
+65 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@rollup\rollup-android-arm64
+66 silly reify mark deleted [
+66 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@rollup\\rollup-android-arm64'
+66 silly reify ]
+67 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@rollup\rollup-android-arm-eabi
+68 silly reify mark deleted [
+68 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@rollup\\rollup-android-arm-eabi'
+68 silly reify ]
+69 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@esbuild\win32-ia32
+70 silly reify mark deleted [
+70 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@esbuild\\win32-ia32'
+70 silly reify ]
+71 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@esbuild\win32-arm64
+72 silly reify mark deleted [
+72 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@esbuild\\win32-arm64'
+72 silly reify ]
+73 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@esbuild\sunos-x64
+74 silly reify mark deleted [ 'E:\\Interpretive_Friction-main\\node_modules\\@esbuild\\sunos-x64' ]
+75 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@esbuild\openbsd-x64
+76 silly reify mark deleted [
+76 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@esbuild\\openbsd-x64'
+76 silly reify ]
+77 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@esbuild\netbsd-x64
+78 silly reify mark deleted [
+78 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@esbuild\\netbsd-x64'
+78 silly reify ]
+79 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@esbuild\linux-x64
+80 silly reify mark deleted [ 'E:\\Interpretive_Friction-main\\node_modules\\@esbuild\\linux-x64' ]
+81 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@esbuild\linux-s390x
+82 silly reify mark deleted [
+82 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@esbuild\\linux-s390x'
+82 silly reify ]
+83 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@esbuild\linux-riscv64
+84 silly reify mark deleted [
+84 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@esbuild\\linux-riscv64'
+84 silly reify ]
+85 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@esbuild\linux-ppc64
+86 silly reify mark deleted [
+86 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@esbuild\\linux-ppc64'
+86 silly reify ]
+87 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@esbuild\linux-mips64el
+88 silly reify mark deleted [
+88 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@esbuild\\linux-mips64el'
+88 silly reify ]
+89 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@esbuild\linux-loong64
+90 silly reify mark deleted [
+90 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@esbuild\\linux-loong64'
+90 silly reify ]
+91 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@esbuild\linux-ia32
+92 silly reify mark deleted [
+92 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@esbuild\\linux-ia32'
+92 silly reify ]
+93 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@esbuild\linux-arm64
+94 silly reify mark deleted [
+94 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@esbuild\\linux-arm64'
+94 silly reify ]
+95 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@esbuild\linux-arm
+96 silly reify mark deleted [ 'E:\\Interpretive_Friction-main\\node_modules\\@esbuild\\linux-arm' ]
+97 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@esbuild\freebsd-x64
+98 silly reify mark deleted [
+98 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@esbuild\\freebsd-x64'
+98 silly reify ]
+99 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@esbuild\freebsd-arm64
+100 silly reify mark deleted [
+100 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@esbuild\\freebsd-arm64'
+100 silly reify ]
+101 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@esbuild\darwin-x64
+102 silly reify mark deleted [
+102 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@esbuild\\darwin-x64'
+102 silly reify ]
+103 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@esbuild\darwin-arm64
+104 silly reify mark deleted [
+104 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@esbuild\\darwin-arm64'
+104 silly reify ]
+105 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@esbuild\android-x64
+106 silly reify mark deleted [
+106 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@esbuild\\android-x64'
+106 silly reify ]
+107 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@esbuild\android-arm64
+108 silly reify mark deleted [
+108 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@esbuild\\android-arm64'
+108 silly reify ]
+109 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@esbuild\android-arm
+110 silly reify mark deleted [
+110 silly reify   'E:\\Interpretive_Friction-main\\node_modules\\@esbuild\\android-arm'
+110 silly reify ]
+111 verbose reify failed optional dependency E:\Interpretive_Friction-main\node_modules\@esbuild\aix-ppc64
+112 silly reify mark deleted [ 'E:\\Interpretive_Friction-main\\node_modules\\@esbuild\\aix-ppc64' ]
+113 http cache dotenv@https://registry.npmjs.org/dotenv/-/dotenv-16.6.1.tgz 0ms (cache hit)
+114 silly tarball no local data for dotenv@https://registry.npmjs.org/dotenv/-/dotenv-16.6.1.tgz. Extracting by manifest.
+115 http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 249ms
+116 silly audit report {
+116 silly audit report   esbuild: [
+116 silly audit report     {
+116 silly audit report       id: 1102341,
+116 silly audit report       url: 'https://github.com/advisories/GHSA-67mh-4wv8-2f99',
+116 silly audit report       title: 'esbuild enables any website to send any requests to the development server and read the response',
+116 silly audit report       severity: 'moderate',
+116 silly audit report       vulnerable_versions: '<=0.24.2',
+116 silly audit report       cwe: [Array],
+116 silly audit report       cvss: [Object]
+116 silly audit report     }
+116 silly audit report   ],
+116 silly audit report   vite: [
+116 silly audit report     {
+116 silly audit report       id: 1116229,
+116 silly audit report       url: 'https://github.com/advisories/GHSA-4w7w-66w2-5vf9',
+116 silly audit report       title: 'Vite Vulnerable to Path Traversal in Optimized Deps `.map` Handling',
+116 silly audit report       severity: 'moderate',
+116 silly audit report       vulnerable_versions: '<=6.4.1',
+116 silly audit report       cwe: [Array],
+116 silly audit report       cvss: [Object]
+116 silly audit report     }
+116 silly audit report   ]
+116 silly audit report }
+117 silly packumentCache corgi:https://registry.npmjs.org/esbuild cache-miss
+118 silly packumentCache corgi:https://registry.npmjs.org/vite cache-miss
+119 http fetch GET 200 https://registry.npmjs.org/dotenv/-/dotenv-16.6.1.tgz 341ms (cache miss)
+120 http fetch GET 200 https://registry.npmjs.org/esbuild 168ms (cache revalidated)
+121 silly packumentCache corgi:https://registry.npmjs.org/esbuild set size:885757 disposed:false
+122 http fetch GET 200 https://registry.npmjs.org/vite 667ms (cache revalidated)
+123 silly packumentCache corgi:https://registry.npmjs.org/vite set size:2229030 disposed:false
+124 silly packumentCache corgi:https://registry.npmjs.org/@vitejs%2fplugin-react cache-miss
+125 http fetch GET 200 https://registry.npmjs.org/@vitejs%2fplugin-react 135ms (cache revalidated)
+126 silly packumentCache corgi:https://registry.npmjs.org/@vitejs%2fplugin-react set size:112470 disposed:false
+127 silly ADD node_modules/dotenv
+128 silly ADD
+129 silly ADD
+130 silly ADD
+131 silly ADD
+132 silly ADD
+133 silly ADD
+134 silly ADD
+135 silly ADD
+136 silly ADD
+137 silly ADD
+138 silly ADD
+139 silly ADD
+140 silly ADD
+141 silly ADD
+142 silly ADD
+143 silly ADD
+144 silly ADD
+145 silly ADD
+146 silly ADD
+147 silly ADD
+148 silly ADD
+149 silly ADD
+150 silly ADD
+151 silly ADD
+152 silly ADD
+153 silly ADD
+154 silly ADD
+155 silly ADD
+156 silly ADD
+157 silly ADD
+158 silly ADD
+159 silly ADD
+160 silly ADD
+161 silly ADD
+162 silly ADD
+163 silly ADD
+164 silly ADD
+165 silly ADD
+166 silly ADD
+167 silly ADD
+168 silly ADD
+169 silly ADD
+170 silly ADD
+171 silly ADD
+172 silly ADD
+173 silly ADD
+174 verbose cwd E:\Interpretive_Friction-main
+175 verbose os Windows_NT 10.0.26200
+176 verbose node v22.18.0
+177 verbose npm  v10.9.3
+178 verbose exit 0
+179 info ok
