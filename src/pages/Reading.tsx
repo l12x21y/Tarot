@@ -7,6 +7,7 @@ import { ChatMessage } from "../components/ChatMessage";
 import { ChatInput } from "../components/ChatInput";
 import { DialogueInterpretationCards } from "../components/DialogueInterpretationCards";
 import { parseDialogueStructuredResponse } from "../utils/parseDialogueStructured";
+import { validateMirrorResponse } from "../utils/validateMirrorResponse";
 import type {
   CardOrientation,
   ChatMessage as ChatMessageType,
@@ -21,6 +22,8 @@ interface ReadingProps {
   orientation: CardOrientation;
   inquiry: string;
 }
+
+const MIRROR_VALIDATION_MAX_RETRIES = 2;
 
 export const Reading = ({ mode, card, orientation, inquiry }: ReadingProps) => {
   const modeConfig = MODES[mode];
@@ -42,11 +45,46 @@ export const Reading = ({ mode, card, orientation, inquiry }: ReadingProps) => {
         setMessages((prev) => [...prev, userMessage]);
         historyRef.current = [...historyRef.current, userMessage];
       }
-      const response = await sendChatToLlm({
-        system,
-        messages: historyRef.current,
-        mode
-      });
+      let response: string;
+      if (mode === "mirror") {
+        let systemUsed = system;
+        for (let attempt = 0; attempt <= MIRROR_VALIDATION_MAX_RETRIES; attempt++) {
+          response = await sendChatToLlm({
+            system: systemUsed,
+            messages: historyRef.current,
+            mode
+          });
+          const validation = validateMirrorResponse(response);
+          console.log("[Mirror validation]", {
+            attempt,
+            pass: validation.valid,
+            issues: validation.issues,
+            textPreview: response.slice(0, 160)
+          });
+          if (validation.valid) {
+            break;
+          }
+          if (attempt === MIRROR_VALIDATION_MAX_RETRIES) {
+            console.warn(
+              "[Mirror validation] failed after max retries; showing last response anyway",
+              { issues: validation.issues }
+            );
+            break;
+          }
+          systemUsed =
+            `${system}\n\nYour previous response contained these issues:\n${validation.issues
+              .map((issue) => `- ${issue}`)
+              .join(
+                "\n"
+              )}\nRemember: in Mirror Mode you must ONLY ask questions, questions must not contain interpretive frames, and you should ask only ONE question at a time. Please try again.`;
+        }
+      } else {
+        response = await sendChatToLlm({
+          system,
+          messages: historyRef.current,
+          mode
+        });
+      }
 
       const assistantMessage = { role: "assistant", content: response } as const;
       historyRef.current = [...historyRef.current, assistantMessage];
