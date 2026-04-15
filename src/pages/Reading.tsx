@@ -21,21 +21,75 @@ interface ReadingProps {
   card: TarotCard;
   orientation: CardOrientation;
   inquiry: string;
+  onStartNewReading: () => void;
 }
 
 const MIRROR_VALIDATION_MAX_RETRIES = 2;
 
-export const Reading = ({ mode, card, orientation, inquiry }: ReadingProps) => {
+type ClosureStage = "chat" | "reflect" | "done";
+
+type SessionLogEntry = {
+  role: "user" | "assistant";
+  content: string;
+  ts: number;
+};
+
+const LOCAL_STORAGE_KEY = "interpretive_friction_sessions";
+
+const isSynthesisLike = (text: string): boolean => {
+  const t = text.toLowerCase();
+  return (
+    t.includes("synthesis") ||
+    t.includes("to synthesize") ||
+    t.includes("in summary") ||
+    t.includes("to sum up") ||
+    t.includes("overall") ||
+    t.includes("takeaway") ||
+    t.includes("in the end") ||
+    t.includes("what i'm hearing") ||
+    t.includes("what i’m hearing")
+  );
+};
+
+export const Reading = ({
+  mode,
+  card,
+  orientation,
+  inquiry,
+  onStartNewReading
+}: ReadingProps) => {
   const modeConfig = MODES[mode];
   const [messages, setMessages] = useState<ReadingThreadMessage[]>([]);
   const [loading, setLoading] = useState(true);
   const initializedRef = useRef(false);
   const historyRef = useRef<ChatMessageType[]>([{ role: "user", content: modeConfig.initialTrigger }]);
+  const sessionStartTsRef = useRef<number>(Date.now());
+  const conversationLogRef = useRef<SessionLogEntry[]>([
+    { role: "user", content: modeConfig.initialTrigger, ts: sessionStartTsRef.current }
+  ]);
+  const synthesisReachedRef = useRef(false);
+  const [closureStage, setClosureStage] = useState<ClosureStage>("chat");
+  const [reflection, setReflection] = useState("");
+  const [completeEnabled, setCompleteEnabled] = useState(false);
+  const [completePulse, setCompletePulse] = useState(false);
   const viewportRef = useRef<HTMLDivElement>(null);
   const system = useMemo(
     () => buildSystemPrompt(mode, card, inquiry, orientation),
     [mode, card, inquiry, orientation]
   );
+
+  const userVisibleMessageCount = (): number => {
+    // Exclude the hidden trigger (first user message).
+    return historyRef.current.filter((m, idx) => m.role === "user" && idx !== 0).length;
+  };
+
+  const updateCompletionAvailability = () => {
+    const meetsMinTurns = userVisibleMessageCount() >= 6;
+    const meetsSynthesis = synthesisReachedRef.current;
+    const enabled = meetsMinTurns || meetsSynthesis;
+    setCompleteEnabled(enabled);
+    setCompletePulse(enabled && closureStage === "chat");
+  };
 
   const askModel = async (newUserInput?: string) => {
     setLoading(true);
@@ -44,6 +98,10 @@ export const Reading = ({ mode, card, orientation, inquiry }: ReadingProps) => {
         const userMessage = { role: "user", content: newUserInput } as const;
         setMessages((prev) => [...prev, userMessage]);
         historyRef.current = [...historyRef.current, userMessage];
+        conversationLogRef.current = [
+          ...conversationLogRef.current,
+          { role: "user", content: newUserInput, ts: Date.now() }
+        ];
       }
       let response: string;
       if (mode === "mirror") {
@@ -88,6 +146,14 @@ export const Reading = ({ mode, card, orientation, inquiry }: ReadingProps) => {
 
       const assistantMessage = { role: "assistant", content: response } as const;
       historyRef.current = [...historyRef.current, assistantMessage];
+      conversationLogRef.current = [
+        ...conversationLogRef.current,
+        { role: "assistant", content: response, ts: Date.now() }
+      ];
+      if (!synthesisReachedRef.current && isSynthesisLike(response)) {
+        synthesisReachedRef.current = true;
+      }
+      updateCompletionAvailability();
 
       const isDialogueFirstTurn = mode === "dialogue" && newUserInput === undefined;
       if (isDialogueFirstTurn) {
@@ -119,8 +185,59 @@ export const Reading = ({ mode, card, orientation, inquiry }: ReadingProps) => {
   }, []);
 
   useEffect(() => {
+    updateCompletionAvailability();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [closureStage]);
+
+  useEffect(() => {
     viewportRef.current?.scrollTo({ top: viewportRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, loading]);
+
+  const submitReflection = () => {
+    const now = Date.now();
+    const record = {
+      mode,
+      card: {
+        name: card.name,
+        orientation
+      },
+      inquiry,
+      conversationLog: conversationLogRef.current,
+      annotations: null as null,
+      reflection: reflection.trim(),
+      timestamps: {
+        sessionStart: sessionStartTsRef.current,
+        reflectionSubmitted: now,
+        completed: now
+      }
+    };
+
+    console.log("[Session record]", record);
+
+    try {
+      const existingRaw = localStorage.getItem(LOCAL_STORAGE_KEY);
+      const existing = existingRaw ? (JSON.parse(existingRaw) as unknown[]) : [];
+      const next = Array.isArray(existing) ? [...existing, record] : [record];
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(next));
+    } catch (e) {
+      console.warn("[Session record] failed to save to localStorage", e);
+    }
+
+    setClosureStage("done");
+    setCompletePulse(false);
+  };
+
+  if (closureStage === "done") {
+    return (
+      <main className="page completion-screen">
+        <h2>Thank you for your reading.</h2>
+        <p className="dim">Your reflection has been recorded.</p>
+        <button className="primary" onClick={onStartNewReading}>
+          Start New Reading
+        </button>
+      </main>
+    );
+  }
 
   return (
     <main className="reading-layout">
@@ -129,15 +246,33 @@ export const Reading = ({ mode, card, orientation, inquiry }: ReadingProps) => {
           <span>{modeConfig.icon}</span>
           <strong>{modeConfig.name}</strong>
         </div>
-        <img
-          src={card.image}
-          alt={card.name}
-          className={`left-card${orientation === "reversed" ? " card-img--reversed" : ""}`}
-        />
-        <h3>{card.name}</h3>
-        <p className="card-orientation-label">
-          {orientation === "upright" ? "Upright" : "Reversed"}
-        </p>
+        <div className="reading-left-content">
+          <img
+            src={card.image}
+            alt={card.name}
+            className={`left-card${orientation === "reversed" ? " card-img--reversed" : ""}`}
+          />
+          <h3>{card.name}</h3>
+          <p className="card-orientation-label">
+            {orientation === "upright" ? "Upright" : "Reversed"}
+          </p>
+        </div>
+
+        <div className="reading-left-footer">
+          <button
+            type="button"
+            className={`complete-reading-btn${completePulse ? " is-pulsing" : ""}`}
+            disabled={!completeEnabled || loading || closureStage !== "chat"}
+            style={
+              completeEnabled
+                ? { borderColor: modeConfig.color, color: modeConfig.color }
+                : undefined
+            }
+            onClick={() => setClosureStage("reflect")}
+          >
+            Complete Reading
+          </button>
+        </div>
       </aside>
       <section className="reading-right">
         <header>
@@ -188,14 +323,47 @@ export const Reading = ({ mode, card, orientation, inquiry }: ReadingProps) => {
             </div>
           )}
         </div>
-        <ChatInput
-          color={modeConfig.color}
-          placeholder={modeConfig.inputPlaceholder}
-          disabled={loading}
-          onSend={async (value) => {
-            await askModel(value);
-          }}
-        />
+        {closureStage === "chat" ? (
+          <ChatInput
+            color={modeConfig.color}
+            placeholder={modeConfig.inputPlaceholder}
+            disabled={loading}
+            onSend={async (value) => {
+              await askModel(value);
+            }}
+          />
+        ) : (
+          <div className="reflection-box">
+            <h3>Before we close, take a moment to reflect:</h3>
+            <p className="dim">
+              How would you describe your understanding of your original concern now? Has anything shifted in how you see the situation?
+            </p>
+            <textarea
+              value={reflection}
+              onChange={(e) => setReflection(e.target.value)}
+              rows={6}
+              placeholder="Write your reflection here..."
+            />
+            <div className="reflection-actions">
+              <button
+                type="button"
+                className="primary"
+                disabled={!reflection.trim()}
+                onClick={submitReflection}
+                style={{ borderColor: modeConfig.color, color: modeConfig.color }}
+              >
+                Submit Reflection
+              </button>
+              <button
+                type="button"
+                className="primary"
+                onClick={() => setClosureStage("chat")}
+              >
+                Back to Chat
+              </button>
+            </div>
+          </div>
+        )}
       </section>
     </main>
   );

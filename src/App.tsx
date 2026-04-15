@@ -74,6 +74,7 @@ function App() {
             card={draw.card}
             orientation={draw.orientation}
             inquiry={inquiry}
+            onStartNewReading={reset}
           />
         )}
       </AnimatePresence>
