@@ -21,6 +21,7 @@ interface ReadingProps {
   card: TarotCard;
   orientation: CardOrientation;
   inquiry: string;
+  preAppraisal: string;
   onStartNewReading: () => void;
 }
 
@@ -56,6 +57,7 @@ export const Reading = ({
   card,
   orientation,
   inquiry,
+  preAppraisal,
   onStartNewReading
 }: ReadingProps) => {
   const modeConfig = MODES[mode];
@@ -103,7 +105,7 @@ export const Reading = ({
           { role: "user", content: newUserInput, ts: Date.now() }
         ];
       }
-      let response: string;
+      let response = "";
       if (mode === "mirror") {
         let systemUsed = system;
         for (let attempt = 0; attempt <= MIRROR_VALIDATION_MAX_RETRIES; attempt++) {
@@ -202,6 +204,7 @@ export const Reading = ({
         orientation
       },
       inquiry,
+      preAppraisal,
       conversationLog: conversationLogRef.current,
       annotations: null as null,
       reflection: reflection.trim(),

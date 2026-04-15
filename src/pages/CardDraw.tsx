@@ -8,10 +8,12 @@ import type { CardOrientation, ModeId, TarotCard } from "../types";
 interface CardDrawProps {
   mode: ModeId;
   inquiry: string;
+  preAppraisal: string;
   selectedCard: TarotCard | null;
   orientation: CardOrientation;
   selectedSlot: number | null;
   onInquiryChange: (text: string) => void;
+  onPreAppraisalChange: (text: string) => void;
   onDraw: (index: number) => void;
   onBegin: () => void;
 }
@@ -19,16 +21,17 @@ interface CardDrawProps {
 export const CardDraw = ({
   mode,
   inquiry,
+  preAppraisal,
   selectedCard,
   orientation,
   selectedSlot,
   onInquiryChange,
+  onPreAppraisalChange,
   onDraw,
   onBegin
 }: CardDrawProps) => {
   const modeConfig = MODES[mode];
-  const [readyToDraw, setReadyToDraw] = useState(false);
-  const inquiryPhase = !readyToDraw;
+  const [phase, setPhase] = useState<"ask" | "appraisal" | "draw">("ask");
 
   return (
     <motion.main className="page" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
@@ -37,7 +40,7 @@ export const CardDraw = ({
         <strong>{modeConfig.name}</strong>
       </div>
 
-      {inquiryPhase && !selectedCard && (
+      {phase === "ask" && !selectedCard && (
         <section className="inquiry-box">
           <h2>What's on your mind?</h2>
           <p>Describe a question, concern, or situation you'd like to explore.</p>
@@ -50,14 +53,37 @@ export const CardDraw = ({
           <button
             className="primary"
             disabled={!inquiry.trim()}
-            onClick={() => setReadyToDraw(true)}
+            onClick={() => setPhase("appraisal")}
           >
             Draw a Card
           </button>
         </section>
       )}
 
-      {readyToDraw && (
+      {phase === "appraisal" && !selectedCard && (
+        <section className="appraisal-box">
+          <h2>Before we begin...</h2>
+          <p>
+            Take a moment to describe how you currently see this situation. How do you frame the
+            problem? What do you think your options are? What feels most true to you right now?
+          </p>
+          <textarea
+            value={preAppraisal}
+            onChange={(e) => onPreAppraisalChange(e.target.value)}
+            placeholder="e.g. I feel like I have to choose between security and fulfillment. Part of me thinks staying is the responsible choice, but another part feels like I'm settling..."
+            rows={6}
+          />
+          <button
+            className="primary"
+            disabled={!preAppraisal.trim()}
+            onClick={() => setPhase("draw")}
+          >
+            Continue to Draw
+          </button>
+        </section>
+      )}
+
+      {phase === "draw" && (
         <section className="draw-box">
           <h2>{!selectedCard ? "Choose a card" : "Your card"}</h2>
           <p>Trust your intuition - select the one that calls to you.</p>

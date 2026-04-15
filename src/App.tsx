@@ -20,6 +20,7 @@ function App() {
   const [page, setPage] = useState<AppPage>("mode-select");
   const [mode, setMode] = useState<ModeId | null>(null);
   const [inquiry, setInquiry] = useState("");
+  const [preAppraisal, setPreAppraisal] = useState("");
   const [draw, setDraw] = useState<{
     card: TarotCard;
     orientation: CardOrientation;
@@ -30,6 +31,7 @@ function App() {
     setPage("mode-select");
     setMode(null);
     setInquiry("");
+    setPreAppraisal("");
     setDraw(null);
     setSelectedSlot(null);
   };
@@ -56,10 +58,12 @@ function App() {
           <CardDraw
             mode={mode}
             inquiry={inquiry}
+            preAppraisal={preAppraisal}
             selectedCard={draw?.card ?? null}
             orientation={draw?.orientation ?? "upright"}
             selectedSlot={selectedSlot}
             onInquiryChange={setInquiry}
+            onPreAppraisalChange={setPreAppraisal}
             onDraw={(index) => {
               setSelectedSlot(index);
               setDraw(pickRandomDraw());
@@ -74,6 +78,7 @@ function App() {
             card={draw.card}
             orientation={draw.orientation}
             inquiry={inquiry}
+            preAppraisal={preAppraisal}
             onStartNewReading={reset}
           />
         )}

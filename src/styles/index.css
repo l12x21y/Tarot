@@ -101,6 +101,20 @@ body {
   font-family: inherit;
 }
 
+.appraisal-box textarea {
+  width: 100%;
+  border: 1px solid #374151;
+  border-radius: 12px;
+  background: #111827;
+  color: var(--text);
+  padding: 12px;
+  font-family: inherit;
+}
+
+.appraisal-box {
+  margin-top: 22px;
+}
+
 .mode-chip {
   display: inline-flex;
   align-items: center;
