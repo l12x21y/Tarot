@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.DS_Store
+
+# Local env secrets
+.env
+
+# Cursor / IDE
+.cursor/
+
+# Specs / assets not needed in repo (optional)
+system_specification.md.pdf
