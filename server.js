@@ -8,6 +8,7 @@ import { createHash } from "node:crypto";
 
 const port = Number(process.env.RECORDING_PORT ?? 8787);
 const allowedOrigin = process.env.ALLOWED_ORIGIN ?? "https://test0415.netlify.app";
+console.log("[CORS] allowedOrigin:", allowedOrigin);
 // 使用 Render 的持久化磁盘路径（如果可用）或本地路径
 const basePath = process.env.RENDER_DISK_PATH || process.cwd();
 const dataFile = resolve(basePath, "data", "session-records.sqlite");
