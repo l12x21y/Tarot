@@ -9,7 +9,5 @@ services:
         value: 10000
       - key: ALLOWED_ORIGIN
         value: https://vermillion-cheesecake-29e6d1.netlify.app/
-    disk:
-      name: data
-      mountPath: /opt/render/project/data
-      sizeGB: 1
+    # 注意：Render 免费计划不支持持久化磁盘
+    # 如果需要持久化数据，请考虑使用外部数据库服务或升级到付费计划
