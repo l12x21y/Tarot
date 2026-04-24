@@ -44,20 +44,64 @@ Why:
 - Netlify serves static frontend files only.
 - Your logging API lives in your separate Node backend.
 
-Required setup:
+### Quick Setup with Render (Recommended)
+
+For a quick and reliable deployment, follow these steps:
+
+1. Deploy your backend to Render using the [RENDER_DEPLOYMENT_GUIDE.md](RENDER_DEPLOYMENT_GUIDE.md).
+2. In Netlify Site Settings -> Environment variables, set:
+   - `VITE_RECORDING_API_BASE_URL=https://your-backend-url.onrender.com/api`
+3. Redeploy Netlify so the new env is baked into the frontend build.
+4. In your Render backend environment, set:
+   - `ALLOWED_ORIGIN=https://vermillion-cheesecake-29e6d1.netlify.app/`
+
+For more detailed instructions, see [RENDER_DEPLOYMENT_GUIDE.md](RENDER_DEPLOYMENT_GUIDE.md).
+
+### Option 1: Deploy Backend to a Cloud Service (Recommended)
 
 1. Deploy backend to a public URL (Render/Railway/Fly etc.), for example:
-	- `https://your-backend.example.com`
+   - `https://your-backend.example.com`
+
 2. In Netlify Site Settings -> Environment variables, set:
-	- `VITE_RECORDING_API_BASE_URL=https://your-backend.example.com/api`
+   - `VITE_RECORDING_API_BASE_URL=https://your-backend.example.com/api`
+
 3. Redeploy Netlify so the new env is baked into the frontend build.
+
 4. In backend environment, set:
-	- `ALLOWED_ORIGIN=https://test0415.netlify.app`
+   - `ALLOWED_ORIGIN=https://test0415.netlify.app`
 
 Quick checks:
 
 - `https://test0415.netlify.app/api/health` returning 404 means Netlify has no backend route.
 - `https://your-backend.example.com/api/health` should return `{ "ok": true }`.
+
+### Option 2: Use Local Backend with Tunneling (For Testing)
+
+If you want to use your local backend while testing on Netlify, you can use a tunneling service like ngrok:
+
+1. Install ngrok: https://ngrok.com/download
+
+2. Start your local backend:
+   ```bash
+   npm run server
+   ```
+
+3. In a new terminal, start ngrok to expose your local backend:
+   ```bash
+   ngrok http 8787
+   ```
+
+4. Copy the ngrok URL (e.g., `https://abc123.ngrok.io`)
+
+5. In Netlify Site Settings -> Environment variables, set:
+   - `VITE_RECORDING_API_BASE_URL=https://abc123.ngrok.io/api`
+
+6. Redeploy Netlify so the new env is baked into the frontend build.
+
+7. Update your local .env file:
+   - `ALLOWED_ORIGIN=https://test0415.netlify.app`
+
+Note: ngrok free tier provides a temporary URL that changes each time you restart ngrok. For persistent testing, consider upgrading to a paid plan or deploying your backend to a cloud service.
 
 ## API
 

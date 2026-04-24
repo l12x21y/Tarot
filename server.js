@@ -1,14 +1,17 @@
 import "dotenv/config";
 import { createServer } from "node:http";
-import { writeFileSync } from "node:fs";
+import { writeFileSync, existsSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import Database from "better-sqlite3";
+import { createHash } from "node:crypto";
 
 const port = Number(process.env.RECORDING_PORT ?? 8787);
 const allowedOrigin = process.env.ALLOWED_ORIGIN ?? "https://test0415.netlify.app";
-const dataFile = resolve(process.cwd(), "data", "session-records.sqlite");
-const csvExportFile = resolve(process.cwd(), "data", "session-records-export.csv");
+// 使用 Render 的持久化磁盘路径（如果可用）或本地路径
+const basePath = process.env.RENDER_DISK_PATH || process.cwd();
+const dataFile = resolve(basePath, "data", "session-records.sqlite");
+const csvExportFile = resolve(basePath, "data", "session-records-export.csv");
 const dataDir = dirname(dataFile);
 
 const buildCorsHeaders = () => ({
@@ -48,6 +51,7 @@ const parseOffset = (rawValue) => {
 await mkdir(dataDir, { recursive: true });
 
 const db = new Database(dataFile);
+console.log(`[startup] dataFile=${dataFile} exists=${existsSync(dataFile)}`);
 db.exec(`
   CREATE TABLE IF NOT EXISTS session_events (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -70,8 +74,30 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_session_events_ts ON session_events(ts);
 `);
 
+// Ensure older DBs get the new column/index: migrate if necessary
+try {
+  const cols = db.prepare("PRAGMA table_info(session_events);").all();
+  const hasInquiryId = cols.some((c) => c.name === "inquiry_id");
+  if (!hasInquiryId) {
+    console.log("[migration] adding inquiry_id column to session_events");
+    db.prepare("ALTER TABLE session_events ADD COLUMN inquiry_id TEXT;").run();
+    db.prepare("CREATE INDEX IF NOT EXISTS idx_session_events_inquiry_id ON session_events(inquiry_id);").run();
+  }
+} catch (err) {
+  console.warn("[migration] failed to migrate DB schema", err);
+}
+
+// Log current table schema for debugging
+try {
+  const colsNow = db.prepare("PRAGMA table_info(session_events);").all();
+  console.log("[db schema]", colsNow.map((c) => ({ name: c.name, type: c.type })));
+} catch (e) {
+  console.warn("[db schema] failed to read table_info", e);
+}
+
 const insertEventStmt = db.prepare(`
   INSERT INTO session_events (
+    inquiry_id,
     received_at,
     session_id,
     type,
@@ -87,6 +113,7 @@ const insertEventStmt = db.prepare(`
     reflection,
     event_json
   ) VALUES (
+    @inquiryId,
     @receivedAt,
     @sessionId,
     @type,
@@ -105,12 +132,12 @@ const insertEventStmt = db.prepare(`
 `);
 
 const buildCsvFromRows = (rows) => {
-  const header = "id,session_id,type,ts,mode,role,content,inquiry,orientation,card_name,card_number,received_at";
   const safe = (value) => `\"${String(value ?? "").replace(/\"/g, '\"\"')}\"`;
   const dataRows = rows.map((row) => {
     const event = JSON.parse(row.event_json);
     return [
       row.id,
+      safe(event.inquiryId),
       safe(event.sessionId),
       safe(event.type),
       safe(event.ts),
@@ -124,6 +151,7 @@ const buildCsvFromRows = (rows) => {
       safe(event.receivedAt)
     ].join(",");
   });
+  const header = "id,inquiry_id,session_id,type,ts,mode,role,content,inquiry,orientation,card_name,card_number,received_at";
   return [header, ...dataRows].join("\n");
 };
 
@@ -169,8 +197,12 @@ const server = createServer(async (req, res) => {
       const raw = await collectRequestBody(req);
       const parsed = JSON.parse(raw);
       const receivedAt = new Date().toISOString();
+      const inquiryId = parsed?.sessionId && parsed?.inquiry
+        ? createHash("sha256").update(`${parsed.sessionId}|${parsed.inquiry}`).digest("hex")
+        : null;
       const row = {
         receivedAt,
+        inquiryId,
         sessionId: parsed?.sessionId ?? null,
         type: parsed?.type ?? null,
         ts: Number.isFinite(Number(parsed?.ts)) ? Number(parsed.ts) : null,
@@ -183,10 +215,17 @@ const server = createServer(async (req, res) => {
         cardName: parsed?.card?.name ?? null,
         cardNumber: parsed?.card?.number ?? null,
         reflection: parsed?.reflection ?? null,
-        eventJson: JSON.stringify({ receivedAt, ...parsed })
+        eventJson: JSON.stringify({ receivedAt, inquiryId, ...parsed })
       };
 
-      insertEventStmt.run(row);
+      let info;
+      try {
+        info = insertEventStmt.run(row);
+        console.log("[insert] run info:", info);
+      } catch (e) {
+        console.warn("[insert] failed to run statement", e, row);
+        throw e;
+      }
       const csvRefreshed = refreshCsvExportFile();
       sendJson(res, 200, {
         ok: true,
@@ -223,7 +262,7 @@ const server = createServer(async (req, res) => {
       const whereClause = filters.length > 0 ? `WHERE ${filters.join(" AND ")}` : "";
       const rows = db
         .prepare(
-          `SELECT id, received_at, session_id, type, ts, mode, role, content, inquiry, pre_appraisal, orientation, card_name, card_number, reflection
+          `SELECT id, inquiry_id, received_at, session_id, type, ts, mode, role, content, inquiry, pre_appraisal, orientation, card_name, card_number, reflection
            FROM session_events
            ${whereClause}
            ORDER BY id DESC

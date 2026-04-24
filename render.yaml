@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: interpretive-friction-backend
+    env: node
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: RECORDING_PORT
+        value: 10000
+      - key: ALLOWED_ORIGIN
+        value: https://vermillion-cheesecake-29e6d1.netlify.app/
+    disk:
+      name: data
+      mountPath: /opt/render/project/data
+      sizeGB: 1

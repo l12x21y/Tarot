@@ -1,9 +1,14 @@
-import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { CardBack } from "../components/CardBack";
-import { CardFace } from "../components/CardFace";
 import { MODES } from "../constants";
 import type { CardOrientation, ModeId, TarotCard } from "../types";
+
+const DISPLAY_CARD_COUNT = 14;
+const TABLE_PERSPECTIVE_X_DEG = 60;
+const SPREAD_STEP_MS = 95;
+
+type DrawStage = "shuffle" | "spreading" | "choose";
 
 interface CardDrawProps {
   mode: ModeId;
@@ -32,9 +37,39 @@ export const CardDraw = ({
 }: CardDrawProps) => {
   const modeConfig = MODES[mode];
   const [phase, setPhase] = useState<"ask" | "appraisal" | "draw">("ask");
+  const [drawStage, setDrawStage] = useState<DrawStage>("shuffle");
+  const [spreadProgress, setSpreadProgress] = useState(-1);
+
+  useEffect(() => {
+    if (phase !== "draw") return;
+    setDrawStage("shuffle");
+    setSpreadProgress(-1);
+  }, [phase]);
+
+  useEffect(() => {
+    if (drawStage !== "spreading") return;
+    setSpreadProgress(-1);
+    const timer = window.setInterval(() => {
+      setSpreadProgress((prev) => {
+        const next = prev + 1;
+        if (next >= DISPLAY_CARD_COUNT - 1) {
+          window.clearInterval(timer);
+          setDrawStage("choose");
+          return DISPLAY_CARD_COUNT - 1;
+        }
+        return next;
+      });
+    }, SPREAD_STEP_MS);
+
+    return () => window.clearInterval(timer);
+  }, [drawStage]);
 
   return (
-    <motion.main className="page" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+    <motion.main
+      className={`page page--carddraw${phase === "draw" && selectedCard ? " page--carddraw-selected" : ""}`}
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+    >
       <div className="mode-chip" style={{ borderColor: modeConfig.color }}>
         <span>{modeConfig.icon}</span>
         <strong>{modeConfig.name}</strong>
@@ -84,60 +119,140 @@ export const CardDraw = ({
       )}
 
       {phase === "draw" && (
-        <section className="draw-box">
-          <h2>{!selectedCard ? "Choose a card" : "Your card"}</h2>
-          <p>Trust your intuition - select the one that calls to you.</p>
-          <div className="seven-cards">
-            {Array.from({ length: 7 }).map((_, index) => (
-              <AnimatePresence key={index}>
-                <motion.div
-                  initial={{ opacity: 1, scale: 1 }}
-                  animate={
-                    selectedCard && index !== selectedSlot
-                      ? { opacity: 0, scale: 0.92, y: 10 }
-                      : { opacity: 1, scale: 1, y: 0 }
-                  }
-                  transition={{ duration: 0.45 }}
-                  className="card-slot"
-                >
-                  {!selectedCard || index !== selectedSlot ? (
-                    <CardBack onClick={() => onDraw(index)} disabled={!!selectedCard} />
-                  ) : (
-                    <motion.div
-                      className="flip-shell"
-                      initial={{ rotateY: 0, scale: 1 }}
-                      animate={{ rotateY: 180, scale: 1.06 }}
-                      transition={{ duration: 0.8, ease: "easeInOut" }}
-                    >
-                      <div className="flip-front"><CardBack onClick={() => undefined} disabled /></div>
-                      <div className="flip-back">
-                        {selectedCard && (
-                          <img
-                            src={selectedCard.image}
-                            alt={selectedCard.name}
-                            className={
-                              orientation === "reversed" ? "flip-card-img card-img--reversed" : "flip-card-img"
-                            }
-                          />
-                        )}
-                      </div>
-                    </motion.div>
-                  )}
-                </motion.div>
-              </AnimatePresence>
-            ))}
+        <section className={`draw-box${selectedCard ? " draw-box--selected" : ""}`}>
+          <h2>
+            {drawStage === "shuffle"
+              ? "Cutting the deck"
+              : !selectedCard
+                ? "Choose a card"
+                : "Your card"}
+          </h2>
+          <p>
+            {drawStage === "shuffle"
+              ? "Hold your question in mind. Freeze this order when it feels right."
+              : "Choose one card from the spread."}
+          </p>
+
+          <div
+            className={`selected-flip-stage${selectedCard ? " has-card" : ""}`}
+            aria-live="polite"
+          >
+            {selectedCard && (
+              <motion.div
+                key={`${selectedCard.id}-${orientation}`}
+                className="selected-flip-shell"
+                initial={{ y: 96, scale: 0.9, rotateY: 0, opacity: 0 }}
+                animate={{ y: 0, scale: 1, rotateY: 180, opacity: 1 }}
+                transition={{ duration: 0.82, ease: "easeInOut" }}
+              >
+                <div className="selected-flip-front">
+                  <CardBack className="selected-flip-back-design" onClick={() => undefined} disabled />
+                </div>
+                <div className="selected-flip-back">
+                  <img
+                    src={selectedCard.image}
+                    alt={selectedCard.name}
+                    className={`selected-flip-img${orientation === "reversed" ? " card-img--reversed" : ""}`}
+                  />
+                </div>
+              </motion.div>
+            )}
           </div>
+
+          {selectedCard && (
+            <motion.div
+              className="selected-info-inline"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+            >
+              <h3>{selectedCard.name}</h3>
+              <p className="card-orientation-label">
+                {orientation === "upright" ? "Upright" : "Reversed"}
+              </p>
+              <button className="primary" onClick={onBegin}>
+                Begin Reading →
+              </button>
+            </motion.div>
+          )}
+
+          {drawStage === "shuffle" && !selectedCard ? (
+            <div className="shuffle-stage">
+              <div className="shuffle-deck" aria-hidden>
+                <motion.div
+                  className="shuffle-layer shuffle-layer-1"
+                  animate={{ x: [0, -18, 16, 0], rotate: [0, -5, 3, 0] }}
+                  transition={{ duration: 1.3, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <CardBack className="card-back--compact" onClick={() => undefined} disabled />
+                </motion.div>
+                <motion.div
+                  className="shuffle-layer shuffle-layer-2"
+                  animate={{ x: [0, 18, -14, 0], rotate: [0, 5, -3, 0] }}
+                  transition={{ duration: 1.1, repeat: Infinity, ease: "easeInOut", delay: 0.12 }}
+                >
+                  <CardBack className="card-back--compact" onClick={() => undefined} disabled />
+                </motion.div>
+                <motion.div
+                  className="shuffle-layer shuffle-layer-3"
+                  animate={{ y: [0, -8, 0], rotate: [0, 2, 0] }}
+                  transition={{ duration: 1.05, repeat: Infinity, ease: "easeInOut", delay: 0.08 }}
+                >
+                  <CardBack className="card-back--compact" onClick={() => undefined} disabled />
+                </motion.div>
+              </div>
+              <button className="primary" onClick={() => setDrawStage("spreading")}>
+                Keep This Order
+              </button>
+            </div>
+          ) : (
+            <div className={`arc-spread-wrap${selectedCard ? " has-selected-card" : ""}`}>
+              <div className="arc-spread" role="list" aria-label="Tarot spread">
+                {Array.from({ length: DISPLAY_CARD_COUNT }).map((_, index) => {
+                  const total = DISPLAY_CARD_COUNT;
+                  const center = (total - 1) / 2;
+                  const t = center === 0 ? 0 : (index - center) / center;
+                  const lift = (1 - t * t) * 86;
+                  const angle = -t * 18;
+                  const isPicked = selectedSlot === index;
+                  const isRevealed = drawStage !== "spreading" || index <= spreadProgress;
+                  const sourceX = -420 + index * 36;
+
+                  return (
+                    <motion.div
+                      key={index}
+                      className={`arc-card${isPicked ? " is-picked" : ""}`}
+                      role="listitem"
+                      initial={{ opacity: 0, x: sourceX, y: 10, rotate: -4, rotateX: 0 }}
+                      animate={{
+                        opacity: isRevealed ? (selectedCard && !isPicked ? 0.45 : 1) : 0,
+                        x: isRevealed ? 0 : sourceX,
+                        y: isRevealed ? (isPicked ? lift - 52 : lift) : 10,
+                        rotate: isRevealed ? angle : -4,
+                        rotateX: isRevealed ? TABLE_PERSPECTIVE_X_DEG : 0,
+                        scale: isRevealed ? (isPicked ? 1.06 : 1) : 0.98
+                      }}
+                      transition={{
+                        duration: drawStage === "spreading" ? 0.46 : 0.32,
+                        ease: "easeOut"
+                      }}
+                      style={{ zIndex: isPicked ? 999 : 200 + index }}
+                    >
+                      <CardBack
+                        className="card-back--compact"
+                        onClick={() => onDraw(index)}
+                        disabled={!!selectedCard || drawStage !== "choose" || !isRevealed}
+                      />
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </section>
       )}
 
-      {selectedCard && (
-        <section className="revealed">
-          <CardFace card={selectedCard} orientation={orientation} />
-          <button className="primary" onClick={onBegin}>
-            Begin Reading →
-          </button>
-        </section>
-      )}
+
     </motion.main>
   );
 };
